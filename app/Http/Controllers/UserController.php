@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Morilog\Jalali\Jalalian;
 
 class UserController extends Controller
@@ -25,6 +26,7 @@ class UserController extends Controller
 
     public function show($id)
     {
+        
         try {
             $music = Music::findOrFail($id);
             $play = $music->play;
@@ -73,14 +75,21 @@ class UserController extends Controller
         return response()->json(['result' => $artist, 'success' => true], 200);
     }
 
-    public function like($id)
+    public function like(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|string',
+        ]);
 
-        $find = like::where('music_id', $id)->where('user_ip', \request()->ip())->first();
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        $find = like::where('music_id', $request->id)->where('user_ip', \request()->ip())->first();
 
         if (!$find) {
             $like = Like::create([
-                'music_id' => $id,
+                'music_id' => $request->id,
                 'user_ip' => \request()->ip()
             ]);
             return response()->json(['success' => true], 200);
@@ -89,9 +98,16 @@ class UserController extends Controller
         return response()->json(['success' => true], 400);
     }
 
-    public function unLike($id)
+    public function unLike(Request $request)
     {
-        $like = Like::where('music_id', $id)->delete();
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+        $like = Like::where('music_id', $request->id)->delete();
         if ($like)
             return response()->json(['success' => true], 200);
         return response()->json(['success' => false], 400);
@@ -214,6 +230,8 @@ class UserController extends Controller
         //         'remixCreator' => $data
         //     ]);
         // }
+        //$array = json_decode(json_encode($data));
+        // return object_to_array($data);
 
         return response()->json([
             'data' => $data->sortByDesc("$sort")->paginatem(10)

@@ -15,7 +15,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $data = Category::all()->paginatem(10);
+        return $data;
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
     /**

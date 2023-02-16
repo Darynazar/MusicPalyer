@@ -33,8 +33,8 @@ Route::get('/cats', [UserController::class, 'cats']);
 Route::get('/feats', [UserController::class, 'feats']);
 Route::get('/artists', [UserController::class, 'artist']);
 Route::get('/tops', [UserController::class, 'topMusic']);
-Route::get('/like/{id}', [UserController::class, 'like'])->where(['id' => '[0-9]+']);
-Route::get('/unLike/{id}', [UserController::class, 'unLike'])->where(['id' => '[0-9]+']);
+Route::post('/like', [UserController::class, 'like']);
+Route::post('/unLike', [UserController::class, 'unLike']);
 Route::post('musicByFilter', [UserController::class, 'musicByfilter']);
 
 //Auth
@@ -46,13 +46,13 @@ Route::post('refreshToken', [AuthController::class, 'refreshToken']);
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('user', [AuthController::class, 'user']);
     //artist
-    // Route::resource('artist', ArtistController::class)->where(['artist' => '[0-9]+']);
-    // //feat
-    // Route::resource('feat', FeatController::class)->where(['feat' => '[0-9]+']);
-    // //category
-    // Route::resource('category', CategoryController::class)->where(['category' => '[0-9]+']);
-    // //music
-    // Route::resource('music', MusicController::class)->where(['music' => '[0-9]+']);
+    Route::resource('artist', ArtistController::class)->where(['artist' => '[0-9]+']);
+    //feat
+    Route::resource('feat', FeatController::class)->where(['feat' => '[0-9]+']);
+    //category
+    Route::resource('category', CategoryController::class)->where(['category' => '[0-9]+']);
+    //music
+    Route::resource('music', MusicController::class)->where(['music' => '[0-9]+']);
     //upload
     Route::post('upload', [UploaderController::class, 'store']);
     Route::patch('upload/{id}', [UploaderController::class, 'update']);
