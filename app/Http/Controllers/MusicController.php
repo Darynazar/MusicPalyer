@@ -39,10 +39,10 @@ class MusicController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'src' => 'required|mimetypes:audio/ogg, audio/mp3',
-            'demo' => 'mimetypes:audio/ogg, audio/mp3',
+            'src' => 'required|string',
+            'demo' => 'string',
             'title' => 'required|string',
-            'cover' => 'required|mimetypes:image/jpeg, image/jpg',
+            'cover' => 'required|string',
             'artist_id' => 'array',
             'artist_id.*' => 'integer',
             'feat_id' => 'array',
@@ -55,35 +55,35 @@ class MusicController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-        $file = $request->file('src');
-        $filename = date('YmdHi') . $file->getClientOriginalName();
+        // $file = $request->file('src');
+        // $filename = date('YmdHi') . $file->getClientOriginalName();
 
-        $info = pathinfo($filename);
-        $filename = $info['filename'] . '.' . "mp3";
+        // $info = pathinfo($filename);
+        // $filename = $info['filename'] . '.' . "mp3";
 
-        $file->move(public_path('Voice'), $filename);
-        $data['src'] = $filename;
+        // $file->move(public_path('Voice'), $filename);
+        // $data['src'] = $filename;
 
 
-        $voiceFile = $request->file('demo');
-        $filename = date('YmdHi') . $voiceFile->getClientOriginalName();
+        // $voiceFile = $request->file('demo');
+        // $filename = date('YmdHi') . $voiceFile->getClientOriginalName();
 
-        $info = pathinfo($filename);
-        $filename = $info['filename'] . '.' . "mp3";
+        // $info = pathinfo($filename);
+        // $filename = $info['filename'] . '.' . "mp3";
 
-        $voiceFile->move(public_path('Audio'), $filename);
-        $data['demo'] = $filename;
+        // $voiceFile->move(public_path('Audio'), $filename);
+        // $data['demo'] = $filename;
 
-        $file = $request->file('cover');
-        $filename = date('YmdHi') . $file->getClientOriginalName();
-        $file->move(public_path('Image'), $filename);
-        $data['cover'] = $filename;
+        // $file = $request->file('cover');
+        // $filename = date('YmdHi') . $file->getClientOriginalName();
+        // $file->move(public_path('Image'), $filename);
+        // $data['cover'] = $filename;
 
         $music = Music::create([
-            'src' => $data['src'],
-            'demo' => $data['demo'],
+            'src' => $request->src,
+            'demo' => $request->demo,
             'title' => $request->title,
-            'cover' => $data['cover'],
+            'cover' => $request->cover,
             // 'artist_id' => $request->artist_id,
             // 'feat_id' => $request->feat_id,
             // 'category_id' => $request->category_id,
@@ -141,10 +141,10 @@ class MusicController extends Controller
     {
         //  return $request;
         $validator = Validator::make($request->all(), [
-            'src' => 'mimetypes:audio/ogg, audio/mp3',
-            'demo' => 'mimetypes:audio/ogg, audio/mp3',
+            'src' => 'string',
+            'demo' => 'string',
             'title' => 'string',
-            'cover' => 'mimetypes:image/jpeg, image/jpg',
+            'cover' => 'string',
             'artist_id' => 'array',
             'artist_id.*' => 'integer',
             'feat_id' => 'array',
@@ -160,41 +160,41 @@ class MusicController extends Controller
         $data = Music::where(['id' => $id])->get()->first();
 
         if ($request->src) {
-
-           
-            unlink('Voice/' . $data->src);
+            $data->src = $request->src;
+            // unlink('Voice/' . $data->src);
             
-            $file = $request->file('src');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
+            // $file = $request->file('src');
+            // $filename = date('YmdHi') . $file->getClientOriginalName();
 
-            $info = pathinfo($filename);
-            $filename = $info['filename'] . '.' . "mp3";
+            // $info = pathinfo($filename);
+            // $filename = $info['filename'] . '.' . "mp3";
 
-            $file->move(public_path('Voice'), $filename);
-            $data['src'] = $filename;
+            // $file->move(public_path('Voice'), $filename);
+            // $data['src'] = $filename;
         }
 
         if ($request->demo) {
+            $data->demo = $request->demo;
+            // unlink('Audio/' . $data->demo);
+            // $voiceFile = $request->file('demo');
+            // $filename = date('YmdHi') . $voiceFile->getClientOriginalName();
 
-            unlink('Audio/' . $data->demo);
-            $voiceFile = $request->file('demo');
-            $filename = date('YmdHi') . $voiceFile->getClientOriginalName();
+            // $info = pathinfo($filename);
+            // $filename = $info['filename'] . '.' . "mp3";
 
-            $info = pathinfo($filename);
-            $filename = $info['filename'] . '.' . "mp3";
-
-            $voiceFile->move(public_path('Audio'), $filename);
-            $data['demo'] = $filename;
+            // $voiceFile->move(public_path('Audio'), $filename);
+            // $data['demo'] = $filename;
         }
         if ($request->title) {
             $data->title = $request->title;
         }
 
-        if ($request->title) {
-            $file = $request->file('cover');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(public_path('Image'), $filename);
-            $data['cover'] = $filename;
+        if ($request->cover) {
+            $data->cover = $request->cover;
+            // $file = $request->file('cover');
+            // $filename = date('YmdHi') . $file->getClientOriginalName();
+            // $file->move(public_path('Image'), $filename);
+            // $data['cover'] = $filename;
         }
         if ($request->top == false)
             $data->top = 0;

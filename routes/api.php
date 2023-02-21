@@ -53,7 +53,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('category', CategoryController::class)->where(['category' => '[0-9]+']);
     //music
     Route::resource('music', MusicController::class)->where(['music' => '[0-9]+']);
-    //upload
+   // upload
     Route::post('upload', [UploaderController::class, 'store']);
     Route::patch('upload/{id}', [UploaderController::class, 'update']);
 });

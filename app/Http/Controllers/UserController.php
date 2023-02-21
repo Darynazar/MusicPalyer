@@ -115,9 +115,6 @@ class UserController extends Controller
 
     public function musicByfilter(Request $request)
     {
-        // $items = Music::withCount('visits')->orderByDesc('visits_count')
-        //     ->paginate(25);
-        //     return $items;
         if ($request->sort) {
             $sort = $request->sort;
         } else $sort = 'view';
@@ -131,110 +128,15 @@ class UserController extends Controller
         ->withWhereHas('feats',function($q)use($request){
             if($request->feats) $q->whereIn('feats.id',$request->feats);
         })
-        ->get();
-        
-    
-        
+        ->get();   
         if ($request->top) {
-            // if ($sort == "play") {
-            //     $data = Music::where('top', $request->top)
-            //        // // ->withCount('likes')
-            //        // // ->orderByDesc('likes_count')
-            //         // ->withCount("$sort")
-            //         // ->orderByDesc("$sort"."_count")
-            //         ->orderByDesc('play')
-            //         ->paginate(10);
-            //     return response()->json([
-            //         'top' => $data
-            //     ]);
-            // } else
-            /////
-            $data = $data->whereIn('top', $request->top);
-            // $data = Music::where('top', $request->top)
-            //     // ->withCount('likes')
-            //     // ->orderByDesc('likes_count')
-            //     ->withCount("$sort")
-            //     ->orderByDesc("$sort" . "_count");
-            //     // ->orderByDesc('play')
-            //     // ->paginate(10);
-            // return response()->json([
-            //     'top' => $data
-            // ]);
+            $data = $data->whereIn('top', $request->top);     
         }
-        // if ($request->demo) { 
-        //     if ($sort == "play") {
-        //         $data = Music::whereIn('demo', $request->demo)
-        //             ->orderByDesc('play')
-        //             ->paginate(10);
-        //         return response()->json([
-        //             'demo' => $data
-        //         ]);
-        //     } else
-        //         $data = Music::whereIn('demo', $request->demo)
-        //             ->withCount("$sort")
-        //             ->orderByDesc("$sort" . "_count")
-        //             ->paginate(10);
-        //     return response()->json([
-        //         'demo' => $data
-        //     ]);
-        // }
         if ($request->title) {
             $data = $data->whereIn('title', $request->title);
-            ///////
-            // if ($sort == "play") {
-            //     $data = Music::whereIn('title', $request->title)
-            //         ->orderByDesc('play')
-            //         ->paginate(10);
-            //     return response()->json([
-            //         'title' => $data
-            //     ]);
-            // } else
-            //     $data = Music::whereIn('title', $request->title)
-            //         ->withCount("$sort")
-            //         ->orderByDesc("$sort" . "_count")
-            //         ->paginate(10);
-            // return response()->json([
-            //     'title' => $data
-            // ]);
         }
-        if ($request->categories) {
-            
-
-            // $data = collect($data)->filter(function ($item) use($request) {
-            //     return array_key_exists('categories', collect($item)->toArray()) && collect($item['categories'])
-            //     ->where('id', $request->categories)->count();
-            // });
-
-            // collect($data)->filter(function ($item) {
-                
-            //     return array_key_exists('categories', collect($item)->toArray()) && collect($item['categories'])
-            //     ->whereIn('id', $request->categories);
-            // });
-
-
-
-            // $data = Category::whereIn('id', $request->categories)->with('musics')->paginate(10);
-            // return response()->json([
-            //     'categories' => $data
-            // ]);
-        }
-        // if ($request->artists) {
-        //     $data = Artist::whereIn('id', $request->artists)->with('musics')->paginate(10);
-        //     return response()->json([
-        //         'artists' => $data
-        //     ]);
-        // }
-        // if ($request->remixCreator) {
-        //     $data = Feat::whereIn('id', $request->remixCreator)->with('musics')->paginate(10);
-        //     return response()->json([
-        //         'remixCreator' => $data
-        //     ]);
-        // }
-        //$array = json_decode(json_encode($data));
-        // return object_to_array($data);
-
         return response()->json([
-            'data' => $data->sortByDesc("$sort")->paginatem(10)
+           $data->sortByDesc("$sort")->paginatem(10)
         ]);
     }
 
