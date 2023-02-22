@@ -117,27 +117,37 @@ class UserController extends Controller
     {
         if ($request->sort) {
             $sort = $request->sort;
-        } else $sort = 'view';
+        } else {
+            $sort = 'view';
+        }
+
         $data = Music::whereNotNull('demo')
-        ->withWhereHas('categories',function($q)use($request){
-            if($request->categories) $q->whereIn('categories.id',$request->categories);
-        })
-        ->withWhereHas('artists',function($q)use($request){
-            if($request->artists) $q->whereIn('artists.id',$request->artists);
-        })
-        ->withWhereHas('feats',function($q)use($request){
-            if($request->feats) $q->whereIn('feats.id',$request->feats);
-        })
-        ->get();   
-        if ($request->top) {
-            $data = $data->whereIn('top', $request->top);     
-        }
-        if ($request->title) {
-            $data = $data->whereIn('title', $request->title);
-        }
-        return response()->json([
-           $data->sortByDesc("$sort")->paginatem(10)
-        ]);
+            ->where($request->top ? ['top' => $request->top] : null)
+            ->where(
+                $request->title
+                    ?
+                    [['title', 'LIKE', "%$request->title%"]]
+                    : null
+            )
+            ->withWhereHas('categories', function ($q) use ($request) {
+                if ($request->categories) {
+                    $q->whereIn('categories.id', $request->categories);
+                }
+            })
+            ->withWhereHas('artists', function ($q) use ($request) {
+                if ($request->artists) {
+                    $q->whereIn('artists.id', $request->artists);
+                }
+            })
+            ->withWhereHas('feats', function ($q) use ($request) {
+                if ($request->feats) {
+                    $q->whereIn('feats.id', $request->feats);
+                }
+            })
+            ->orderByDesc($sort)
+            ->paginate(10);
+        //return $data->get();
+        return response()->json($data);
     }
 
 
