@@ -12,9 +12,10 @@ class UploaderController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'src' => 'mimetypes:audio/ogg, audio/mp3',
-            'demo' => 'mimetypes:audio/ogg, audio/mp3',
-            'cover' => 'mimetypes:image/jpeg, image/jpg',
+            
+            'src' => 'mimes:mpeg,mpga,mp3,wav',
+            'demo' => 'mimes:mpeg,mpga,mp3,wav,ogg',
+            'cover' => 'mimes:jpg,jpeg',
         ]);
 
         if ($validator->fails()) {
