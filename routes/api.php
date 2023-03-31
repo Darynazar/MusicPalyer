@@ -34,7 +34,7 @@ Route::get('/feats', [UserController::class, 'feats']);
 Route::get('/artists', [UserController::class, 'artist']);
 Route::get('/tops', [UserController::class, 'topMusic']);
 Route::post('/like', [UserController::class, 'like']);
-Route::post('/unLike', [UserController::class, 'unLike']);
+Route::post('/disLike', [UserController::class, 'unLike']);
 Route::post('musicByFilter', [UserController::class, 'musicByfilter']);
 
 //Auth
