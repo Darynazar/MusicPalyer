@@ -17,9 +17,7 @@ class CategoryController extends Controller
     {
         $data = Category::all()->paginatem(10);
         return $data;
-        return response()->json([
-            'data' => $data
-        ]);
+        return response()->json(['result' => $data, 'success'=> true]);
     }
 
     /**

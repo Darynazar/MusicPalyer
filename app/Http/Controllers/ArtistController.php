@@ -17,9 +17,7 @@ class ArtistController extends Controller
     {
         $data = Artist::all()->paginatem(10);
         return $data;
-        return response()->json([
-            'data' => $data
-        ]);
+        return response()->json(['result' => $data, 'success'=> true]);
     }
 
     /**

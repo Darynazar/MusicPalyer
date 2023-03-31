@@ -147,7 +147,7 @@ class UserController extends Controller
             ->orderByDesc($sort)
             ->paginate(10);
         //return $data->get();
-        return response()->json($data);
+        return response()->json(['result' => $data, 'success'=> true]);
     }
 
 
