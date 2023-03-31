@@ -68,19 +68,10 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
             $user = Auth::user();
             $client = DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
-            $success['token'] =  $user->createToken('MyApp')->accessToken;
-            return response()->json(['success' => $success, 'success'=> true], $this->successStatus);
+            //$success['token'] =  $user->createToken('MyApp')->accessToken;
+            return response()->json(['success'=> true], $this->successStatus);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }
-        
-        // $response = Http::asForm()->post('http://127.0.0.1:8000', [
-        //     'grant_type' => 'refresh_token',
-        //     'refresh_token' => 'the-refresh-token',
-        //     'client_id' => 'client-id',
-        //     'client_secret' => 'client-secret',
-        //     'scope' => '',
-        // ]);
-        // return response()->json(['success' => $response], 200);
     }
 }
