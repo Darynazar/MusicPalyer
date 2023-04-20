@@ -15,8 +15,7 @@ class FeatController extends Controller
      */
     public function index()
     {
-        $data = Feat::all()->paginatem(10);
-        return $data;
+        $data = Feat::paginate(10);
         return response()->json(['result' => $data, 'success'=> true]);
     }
 

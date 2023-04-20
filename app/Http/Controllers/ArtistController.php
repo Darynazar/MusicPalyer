@@ -15,8 +15,7 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        $data = Artist::all()->paginatem(10);
-        return $data;
+        $data = Artist::paginate(1);
         return response()->json(['result' => $data, 'success'=> true]);
     }
 
