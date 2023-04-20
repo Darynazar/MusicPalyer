@@ -33,6 +33,7 @@ Route::get('/cats', [UserController::class, 'cats']);
 Route::get('/feats', [UserController::class, 'feats']);
 Route::get('/artists', [UserController::class, 'artist']);
 Route::get('/tops', [UserController::class, 'topMusic']);
+Route::get('/titles', [UserController::class, 'titleMusic']);
 Route::post('/like', [UserController::class, 'like']);
 Route::post('/disLike', [UserController::class, 'unLike']);
 Route::post('musicByFilter', [UserController::class, 'musicByfilter']);

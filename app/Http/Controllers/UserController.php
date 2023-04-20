@@ -151,19 +151,11 @@ class UserController extends Controller
     }
 
 
-    // public function musicByFilter(Request $request)
-    // {
-    //     $students = Music::when($request->filled('top'), function ($query) use ($request) {
-    //         return $query->where('top', true);
-    //     })->when($request->filled('like'), function ($query) use ($request) {
-    //         return $query->orWhere('like', $request->like);
-    //     });
-
-    //     return response()->json([
-    //         'students' => $students,
-    //         'datas' => $request->all()
-    //     ]);
-    // }
+    public function titleMusic()
+    {
+        $title = Music::whereNotNull('title')->get('title');
+        return response()->json(['result' => $title, 'success' => true], 200);
+    }
 }
 
 
