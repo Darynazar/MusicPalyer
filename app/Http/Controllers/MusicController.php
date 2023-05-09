@@ -126,11 +126,15 @@ class MusicController extends Controller
         $data = Music::where(['id' => $id])->get()->first();
 
         if ($request->src) {
+            $audio = new \wapmorgan\Mp3Info\Mp3Info("Voice/$request->src");
             $data->src = $request->src;
+            $data->demoDuration = $audio->duration;
         }
 
         if ($request->demo) {
             $data->demo = $request->demo;
+            $audio = new \wapmorgan\Mp3Info\Mp3Info("Audio/$request->demo");
+            $data->demoDuration = $audio->duration;
         }
         if ($request->title) {
             $data->title = $request->title;
