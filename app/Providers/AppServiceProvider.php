@@ -29,22 +29,5 @@ class AppServiceProvider extends ServiceProvider
         // $this->app->bind('path.public', function() {
         //     return base_path() .'/../musicplayer.robnsiv.ir';
         // });
-        
-        Paginator::useBootstrap();
-
-        Collection::macro('paginatem', function ($perPage, $page = null, $pageName = 'page') {
-            $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
-
-            return new LengthAwarePaginator(
-                $this->forPage($page, $perPage),
-                $this->count(),
-                $perPage,
-                $pageName,
-                [
-                    'path' => LengthAwarePaginator::resolveCurrentPath(),
-                    'pageName' => $pageName,
-                ]
-            );
-        });
     }
 }

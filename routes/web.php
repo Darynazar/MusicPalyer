@@ -18,4 +18,3 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('filter', [UserController::class, 'musicByFilter']);

@@ -51,42 +51,19 @@ class MusicController extends Controller
             'category_id.*' => 'integer',
             'top' => 'string',
         ]);
-        // return $request;
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-        // $file = $request->file('src');
-        // $filename = date('YmdHi') . $file->getClientOriginalName();
-
-        // $info = pathinfo($filename);
-        // $filename = $info['filename'] . '.' . "mp3";
-
-        // $file->move(public_path('Voice'), $filename);
-        // $data['src'] = $filename;
-
-
-        // $voiceFile = $request->file('demo');
-        // $filename = date('YmdHi') . $voiceFile->getClientOriginalName();
-
-        // $info = pathinfo($filename);
-        // $filename = $info['filename'] . '.' . "mp3";
-
-        // $voiceFile->move(public_path('Audio'), $filename);
-        // $data['demo'] = $filename;
-
-        // $file = $request->file('cover');
-        // $filename = date('YmdHi') . $file->getClientOriginalName();
-        // $file->move(public_path('Image'), $filename);
-        // $data['cover'] = $filename;
+        $audio = new \wapmorgan\Mp3Info\Mp3Info("Voice/$request->src", true);
+        $demo= new \wapmorgan\Mp3Info\Mp3Info("Audio/$request->demo", true);
 
         $music = Music::create([
             'src' => $request->src,
             'demo' => $request->demo,
             'title' => $request->title,
-            'cover' => $request->cover,
-            // 'artist_id' => $request->artist_id,
-            // 'feat_id' => $request->feat_id,
-            // 'category_id' => $request->category_id,
+            'cover' => $request->cover, 
+            'musicDuration' => $audio->duration,
+            'demoDuration' => $demo->duration,
             'top' => $request->top,
         ]);
         if ($music) {
@@ -105,17 +82,7 @@ class MusicController extends Controller
      */
     public function show($id)
     {
-
         $music = Music::with(['artists', 'feats', 'categories'])->where('id', $id)->get();
-
-        // $audio = new Mp3Info("audio/202301310759-1517740286_103101696.mpeg", true);
-
-        // return $audio;
-        //         $audio = new \wapmorgan\Mp3Info\Mp3Info($fileName, true);
-        // $audio->duration \\ duration in seconds
-        // if($music) {
-        //     return response()->json(['success' => false], 404);
-        // }
         return response()->json(['result' => $music, 'success' => true], 200);
     }
 
@@ -139,7 +106,6 @@ class MusicController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //  return $request;
         $validator = Validator::make($request->all(), [
             'src' => 'string',
             'demo' => 'string',
@@ -161,29 +127,10 @@ class MusicController extends Controller
 
         if ($request->src) {
             $data->src = $request->src;
-            // unlink('Voice/' . $data->src);
-            
-            // $file = $request->file('src');
-            // $filename = date('YmdHi') . $file->getClientOriginalName();
-
-            // $info = pathinfo($filename);
-            // $filename = $info['filename'] . '.' . "mp3";
-
-            // $file->move(public_path('Voice'), $filename);
-            // $data['src'] = $filename;
         }
 
         if ($request->demo) {
             $data->demo = $request->demo;
-            // unlink('Audio/' . $data->demo);
-            // $voiceFile = $request->file('demo');
-            // $filename = date('YmdHi') . $voiceFile->getClientOriginalName();
-
-            // $info = pathinfo($filename);
-            // $filename = $info['filename'] . '.' . "mp3";
-
-            // $voiceFile->move(public_path('Audio'), $filename);
-            // $data['demo'] = $filename;
         }
         if ($request->title) {
             $data->title = $request->title;
@@ -191,29 +138,13 @@ class MusicController extends Controller
 
         if ($request->cover) {
             $data->cover = $request->cover;
-            // $file = $request->file('cover');
-            // $filename = date('YmdHi') . $file->getClientOriginalName();
-            // $file->move(public_path('Image'), $filename);
-            // $data['cover'] = $filename;
         }
         if ($request->top == false)
             $data->top = 0;
         if ($request->top) {
             $data->top = $request->top;
         }
-        // $music = Music::where('id', $id)->update([
-        //     'src' => $data['src'],
-        //     'demo' => $data['demo'],
-        //     'title' => $request->title,
-        //     'cover' => $request->cover,
-        //     // 'artist_id' => $request->artist_id,
-        //     // 'feat_id' => $request->feat_id,
-        //     'category_id' => $request->category_id,
-        //     'top' => $request->top,
-        // ]);
         $data->save();
-
-
         if ($data) {
             $data->artists()->sync($request->artist_id);
             $data->feats()->sync($request->feat_id);

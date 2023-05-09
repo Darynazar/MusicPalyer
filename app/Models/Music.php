@@ -23,6 +23,8 @@ class Music extends Model
         'play', 
         'view', 
         'heart', 
+        'musicDuration',
+        'demoDuration',
         'top'
     ];
 
